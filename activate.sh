@@ -14,6 +14,6 @@ echo "sourcing virtual environment..."
 source "$BIN_ACTIVATE";
 echo "activating virtual environment \"$(basename $VIRTUAL_ENV)\"..."
 echo "attempting to update packages..."
-pip install -r requirements.txt;
+pip3 install -r requirements.txt;
 echo "done!"
 

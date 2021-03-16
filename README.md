@@ -25,6 +25,14 @@ If an external Python library is needed, follow these steps to install it:
    ensures the new package will be installed for everyone the next time they
    source `activate.sh` or run `pip install -r requirements.txt`.
 
+## Running Tests
+
+To run a test suite:
+
+``` bash
+python -m unittest tests/<test_file>.py
+```
+
 ## Contributors
 
 * Kenzie Gage
@@ -32,4 +40,3 @@ If an external Python library is needed, follow these steps to install it:
 * Joshua Lund
 * Matt O'Tousa
 * Camille Range
-
