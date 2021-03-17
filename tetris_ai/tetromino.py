@@ -118,3 +118,16 @@ class Tetromino:
                 print("█" if cell else ".", end="")
             print()
         print()
+
+    def copy(self):
+        copy = Tetromino(self.shape_key)
+        copy.rotation = self.rotation
+        return copy
+
+    def __eq__(self, other):
+        if not isinstance(other, type(self)):
+            return False
+        return self.shape_key == other.shape_key and self.rotation == other.rotation
+
+    def __ne__(self, other):
+        return not self == other

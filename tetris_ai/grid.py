@@ -126,6 +126,8 @@ class Grid:
 
     def __eq__(self, other):
         ''' returns true if 2 Grids are equal '''
+        if not isinstance(other, type(self)):
+            return False
         for i in range(len(self._cols)):
             if self._cols[i] != other._cols[i]:
                 return False
