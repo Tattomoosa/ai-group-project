@@ -1,0 +1,72 @@
+class Grid:
+
+    HEIGHT = 24
+    WIDTH = 10
+
+    __init__(self, cols = [0] * WIDTH):
+
+        # Creates a new Grid from the given columns
+        # There must be WIDTH columns in cols, and each one is represented as
+        # an int with its bits set according to block placement
+
+        # Defaults to empty grid
+
+    absorb(self, other):
+
+        # Combines another grid's blocks into this one
+        # (for example, a transformed tetromino)
+
+        # This method modifies self
+
+
+    aggregate_height(self):
+
+        # Calculates the grid's aggregate height, that is, the sum of all
+        # columns' heights
+
+
+    collision(selfA, selfB):
+
+        # Returns true if there is a collision between two grids
+
+
+    complete_lines(self):
+
+        # Returns the number of complete lines on this grid
+
+
+    copy(self):
+
+        # Creates a copy of this Grid
+
+
+    holes(self):
+
+        # Returns the number of holes in this grid, that is, empty cells with
+        # at least one block above them
+
+
+    max_height(self):
+
+        # Calculates the height of the highest column
+
+
+    __str__(self):
+
+        # Creates a printable representation of this grid
+
+
+    translate(self, x: int, y: int):
+
+        # Translates this grid
+        #    x: horizontal shift, positive for right shift and negative for left
+        #    y: vertical shift downward (must be non-negative)
+        # Returns a new, transformed grid for a successful transform, or None
+        # if the transform would move blocks out of bounds
+
+        # This method returns a new Grid and does not modify self
+
+
+    wipe_complete_lines(self):
+
+        # Wipes all complete lines on this grid

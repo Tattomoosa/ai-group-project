@@ -20,6 +20,9 @@ class Grid:
     
     def __init__(self, cols = [0] * WIDTH):
         
+		# Creates a new Grid from the given columns
+		# Defaults to empty grid
+		
         assert len(cols) == Grid.WIDTH
         
         # Copies columns from cols, or uses cols directly if it's a deque
@@ -105,7 +108,8 @@ class Grid:
             other._cols.rotate(1)
     
     def copy(self):
-        return Grid(self._cols)
+		# Creates a copy of this grid
+        return Grid(deque(self._cols))
     
     @staticmethod
     def cell_to_string(col: int, y: int):
@@ -142,6 +146,8 @@ class Grid:
         return count_bits_set(col)
     
     def holes(self):
+		# Returns the number of holes in this grid, that is, empty cells with
+		# at least one block above them
         return sum(Grid.holes_in_column(col) for col in self._cols)
     
     def complete_line_mask(self):
@@ -157,10 +163,11 @@ class Grid:
         return mask
     
     def complete_lines(self):
+		# Returns the number of complete lines on this grid
         return count_bits_set(self.complete_line_mask())
     
     def wipe_masked_lines(self, mask: int):
-        
+		
         count = 0
         
         while (line := mask.bit_length() - 1) >= 0:
@@ -179,6 +186,7 @@ class Grid:
         return count
     
     def wipe_complete_lines(self):
+		# Wipes all complete lines on this grid
         self.wipe_masked_lines(self.complete_lines())
 
 
