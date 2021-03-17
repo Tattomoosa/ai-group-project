@@ -8,6 +8,9 @@
 # 12 13 14 15
 # each index in the array represents
 
+from grid import layout_to_grid
+
+
 tetromino_layouts = {
     "I": [[1, 5, 9, 13], [4, 5, 6, 7]],
     "J": [[1, 2, 5, 9], [0, 4, 5, 6], [1, 5, 9, 8], [4, 5, 6, 10]],
@@ -19,10 +22,17 @@ tetromino_layouts = {
 }
 
 
+tetromino_grids = { \
+	shape: list(map(layout_to_grid, tetromino_layouts[shape])) \
+	for shape in tetromino_layouts.keys() \
+}
+
+
 class Tetromino:
     def __init__(self, tetromino_shape_key: str):
         try:
             self._layout = tetromino_layouts[tetromino_shape_key.upper()]
+            self._grid = tetromino_grids[tetromino_shape_key.upper()]
             self.shape_key = tetromino_shape_key
             self.rotation = 0
         except:
@@ -43,6 +53,16 @@ class Tetromino:
     def layout(self):
         '''returns the correct layout with respect to rotation'''
         return self._layout[self.rotation].copy()
+    
+    @property
+    def rotation_steps(self):
+        '''returns the number of rotation steps this piece has'''
+        return len(self._layout)
+	
+    @property
+    def grid(self):
+        '''returns the correct grid with respect to rotation'''
+        return self._grid[self.rotation]
 
     def as_shape(self):
         '''returns the current shape in a 4x4 grid of flags'''
