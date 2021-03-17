@@ -23,8 +23,8 @@ tetromino_layouts = {
 
 
 tetromino_grids = { \
-	shape: list(map(layout_to_grid, tetromino_layouts[shape])) \
-	for shape in tetromino_layouts.keys() \
+    shape: list(map(layout_to_grid, tetromino_layouts[shape])) \
+    for shape in tetromino_layouts.keys() \
 }
 
 
@@ -58,7 +58,7 @@ class Tetromino:
     def rotation_steps(self):
         '''returns the number of rotation steps this piece has'''
         return len(self._layout)
-	
+    
     @property
     def grid(self):
         '''returns the correct grid with respect to rotation'''
