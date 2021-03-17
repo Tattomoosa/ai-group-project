@@ -1,14 +1,16 @@
 # official piece names according to https://tetris.fandom.com/wiki/Tetromino
 
 # this configuration is based on https://levelup.gitconnected.com/writing-tetris-in-python-2a16bddb5318
-# 1s indicate filled, 0s indicate empty indexes in this grid:
+# numbers indicated filled indices in this grid:
+
 # 0  1  2  3
 # 4  5  6  7
 # 8  9  10 11
 # 12 13 14 15
+
 # each index in the array represents
 
-from grid import layout_to_grid
+from .grid import layout_to_grid
 
 
 tetromino_layouts = {
@@ -22,19 +24,19 @@ tetromino_layouts = {
 }
 
 
-tetromino_grids = { \
-    shape: list(map(layout_to_grid, tetromino_layouts[shape])) \
-    for shape in tetromino_layouts.keys() \
+tetromino_grids = {
+    shape: list(map(layout_to_grid, tetromino_layouts[shape]))
+    for shape in tetromino_layouts.keys()
 }
 
 
 class Tetromino:
-    def __init__(self, tetromino_shape_key: str):
+    def __init__(self, tetromino_shape_key: str, rotation: int = 0):
         try:
             self._layout = tetromino_layouts[tetromino_shape_key.upper()]
             self._grid = tetromino_grids[tetromino_shape_key.upper()]
             self.shape_key = tetromino_shape_key
-            self.rotation = 0
+            self._rotation = rotation
         except:
             raise KeyError(
                 f"Tetromino type '{tetromino_shape_key}' not found. " +
@@ -42,30 +44,59 @@ class Tetromino:
 
     def rotate(self, steps: int = 1):
         '''default 1 rotates counterclockwise, -1 rotates clockwise'''
-        self.rotation = (self.rotation + steps) % len(self._layout)
+        self.rotation += steps
 
     @staticmethod
     def valid_layout_keys():
         ''' I, J, L, O, S, T, Z '''
         return list(tetromino_layouts.keys())
 
+    @staticmethod
+    def get_all():
+        ''' Returns a fresh list of all tetrominos '''
+        return list(map(lambda x: Tetromino(x), Tetromino.valid_layout_keys()))
+
     @property
     def layout(self):
         '''returns the correct layout with respect to rotation'''
         return self._layout[self.rotation].copy()
-    
+
+    @property
+    def rotation(self):
+        return self._rotation
+
+    @rotation.setter
+    def rotation(self, value):
+        self._rotation = value % len(self._layout)
+
     @property
     def rotation_steps(self):
         '''returns the number of rotation steps this piece has'''
         return len(self._layout)
-    
+
     @property
     def grid(self):
         '''returns the correct grid with respect to rotation'''
         return self._grid[self.rotation]
 
+    @property
+    def number_of_unique_rotations(self):
+        '''
+        returns the number of rotation shapes that are unique, e.g. "O" has 1,
+        "J" has 4
+        '''
+        return len(self._layout)
+
     def as_shape(self):
-        '''returns the current shape in a 4x4 grid of flags'''
+        '''
+        returns the current shape in a 4x4 grid of flags, e.g "I" shape:
+        [
+            0, 1, 0, 0,
+            0, 1, 0, 0,
+            0, 1, 0, 0,
+            0, 1, 0, 0,
+        ]
+        '''
         layout = self.layout
         shape = []
         for y in range(4):
@@ -79,6 +110,7 @@ class Tetromino:
         return shape
 
     def print_block(self):
+        ''' prints as a tetris block '''
         shape = self.as_shape()
         print()
         for row in shape:
