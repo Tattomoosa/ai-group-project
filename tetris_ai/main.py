@@ -36,20 +36,24 @@ def run_game_example():
         
         # Move the tetromino that direction step-by-step, checking for
         # collisions each step
-        while count and (tet_grid_side := tet_grid.translate(direction, 0)):
+        tet_grid_side = tet_grid.translate(direction, 0)
+        while count and tet_grid_side:
             if game_grid.collision(tet_grid_side):
                 break
             tet_grid = tet_grid_side
             count -= 1
+            tet_grid_side = tet_grid.translate(direction,0)
         
         
         # Let's move the tetromino down until it can't go down anymore
         # We go either until the translation is invalid (meaning we tried to
         # move passed the floor) or until we collide with existing blocks
-        while tet_grid_down := tet_grid.translate(0, 1):
+        tet_grid_down = tet_grid.translate(0, 1)
+        while tet_grid_down:
             if(game_grid.collision(tet_grid_down)):
                 break
             tet_grid = tet_grid_down
+            tet_grid_down = tet_grid.translate(0, 1)
         
         # We've found a good random spot to plant our tetromino
         # Let's get some stats about this move

@@ -169,8 +169,9 @@ class Grid:
     def wipe_masked_lines(self, mask: int):
 		
         count = 0
-        
-        while (line := mask.bit_length() - 1) >= 0:
+
+        line = mask.bit_length() - 1
+        while line >= 0:
             
             mask &= ~(1 << line)
             mask_before = ~(-1 << line)
@@ -182,6 +183,7 @@ class Grid:
                 self._cols.rotate(1)
             
             count += 1
+            line = mask.bit_length() - 1
         
         return count
     
