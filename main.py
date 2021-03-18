@@ -20,8 +20,9 @@ def pick_option(options: List[TetrisMove]):
               lines_cleared)
 
         # weight the above and figure out best option
-        # if False:
+        # TODO do something better
         if aggregate_height < best_option.result.aggregate_height():
+            # if False:
             best_option = option
 
     return best_option
