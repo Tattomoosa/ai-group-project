@@ -4,7 +4,15 @@ import random
 
 
 def pick_option(options: List[TetrisMove]):
+    # The weights for our heuristics
+    weights = {
+        "aggregate_height": -1,
+        "max_height": -1,
+        "holes": -1,
+        "lines_cleared": 1
+    }
     best_option = random.choice(options)
+    best_option_eval = calc_pick(best_option, weights)
     for option in options:
         # Let's get some stats about this move's results
         # This would be some very useful info for an AI trying to decide how
@@ -19,13 +27,23 @@ def pick_option(options: List[TetrisMove]):
               holes,
               lines_cleared)
 
-        # weight the above and figure out best option
         # TODO do something better
-        if aggregate_height < best_option.result.aggregate_height():
+        # Higher the score means better option
+        test_eval = calc_pick(option, weights)
+        if test_eval > best_option_eval:
             # if False:
             best_option = option
+            best_option_eval = test_eval
 
     return best_option
+
+
+# Evaluate how good an option is based on the weight, higher score is better
+def calc_pick(option, weights):
+    return (option.result.aggregate_height() * weights["aggregate_height"]
+            + option.result.max_height() * weights["max_height"]
+            + option.result.holes() * weights["holes"]
+            + option.lines_cleared * weights["lines_cleared"])
 
 
 def run_game_example():
