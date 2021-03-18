@@ -12,15 +12,16 @@ def pick_option(options: List[TetrisMove]):
         aggregate_height = option.result.aggregate_height()
         max_height = option.result.max_height()
         holes = option.result.holes()
-        complete_lines = option.result.complete_lines()
+        lines_cleared = option.lines_cleared
         print('OPTION: ',
               aggregate_height,
               max_height,
               holes,
-              complete_lines)
+              lines_cleared)
 
         # weight the above and figure out best option
-        if False:
+        # if False:
+        if aggregate_height < best_option.result.aggregate_height():
             best_option = option
 
     return best_option
@@ -36,7 +37,7 @@ def run_game_example():
         print(chr(27) + "[2J")
 
         # Get possible moves with piece
-        options = game.get_move_options(game.current_piece)
+        options = game.get_move_options()
 
         # No possible moves - game lost
         if not options:
@@ -45,14 +46,17 @@ def run_game_example():
         # AI STEP - analyze result here
         move = pick_option(options)
 
+        # updates game state for next step
         game.execute_move(move)
+
         # Let's print the new game grid and its stats
         print(game.grid)
-
         print("Aggregate height: " + str(game.grid.aggregate_height()))
         print("Max height: " + str(game.grid.max_height()))
         print("Holes: " + str(game.grid.holes()))
         print("Complete lines: " + str(game.grid.complete_lines()))
+        print("Next piece:")
+        game.current_piece.print_block()
 
         # Pause to let the user hit enter
         input("Press enter to continue...")

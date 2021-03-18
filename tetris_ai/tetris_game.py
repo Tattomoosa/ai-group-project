@@ -31,7 +31,7 @@ class TetrisGame:
         self._get_next_tetromino()
         self.turns_elapsed = 0
 
-    def get_move_outcome(self, tetromino: Tetromino, x: int) -> [Grid, None]:
+    def _get_move_outcome(self, tetromino: Tetromino, x: int) -> [Grid, None]:
         tet_grid = tetromino.grid
         tet_grid = tet_grid.translate(x, 0)
         # translate already checks collisions, if None comes back then
@@ -65,14 +65,16 @@ class TetrisGame:
                 moves.append((x, rotation))
         return moves
 
-    def get_move_options(self, piece: Tetromino) -> TetrisMove:
+    def get_move_options(self, piece: [Tetromino, None] = None) -> TetrisMove:
+        if piece is None:
+            piece = self.current_piece
         moves = self._get_possible_moves(piece)
 
         def map_moves_to_outcomes(move):
             x = move[0]
             rotated_piece = piece.copy()
             rotated_piece.rotation = move[1]
-            return self.get_move_outcome(rotated_piece, x)
+            return self._get_move_outcome(rotated_piece, x)
 
         outcomes = map(map_moves_to_outcomes, moves)
         outcomes = filter(lambda x: x != None, outcomes)

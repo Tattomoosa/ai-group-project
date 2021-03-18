@@ -115,7 +115,7 @@ class Tetromino:
         print()
         for row in shape:
             for cell in row:
-                print("█" if cell else ".", end="")
+                print("██" if cell else "  ", end="")
             print()
         print()
 
