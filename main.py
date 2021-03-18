@@ -31,6 +31,7 @@ def pick_option(options: List[TetrisMove]):
         max_height = option.result.max_height()
         holes = option.result.holes()
         lines_cleared = option.lines_cleared
+        score = option.score
         # print(f'OPTION {index}: ',
         #      aggregate_height,
         #      max_height,
