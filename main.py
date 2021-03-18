@@ -57,8 +57,5 @@ def run_game_example():
         # Pause to let the user hit enter
         input("Press enter to continue...")
 
-        # Time to do some post-move clean-up
-        # game.grid.wipe_complete_lines()
-
 
 run_game_example()
