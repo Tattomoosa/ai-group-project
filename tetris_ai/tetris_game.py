@@ -126,3 +126,7 @@ class TetrisGame:
         print(f"Score: {self.score}")
         print(f"Pieces dropped: {self.turns_elapsed}")
         print(f"Lines cleared: {self.lines_cleared}")
+        print("Aggregate height: " + str(self.grid.aggregate_height()))
+        print("Max height: " + str(self.grid.max_height()))
+        print("Holes: " + str(self.grid.holes()))
+        print("Complete lines: " + str(self.grid.complete_lines()))
