@@ -1,5 +1,29 @@
-from tetris_ai import Tetromino, TetrisGame
+from typing import List
+from tetris_ai import Tetromino, TetrisGame, TetrisMove
 import random
+
+
+def pick_option(options: List[TetrisMove]):
+    best_option = random.choice(options)
+    for option in options:
+        # Let's get some stats about this move's results
+        # This would be some very useful info for an AI trying to decide how
+        # good of a position this is!
+        aggregate_height = option.result.aggregate_height()
+        max_height = option.result.max_height()
+        holes = option.result.holes()
+        complete_lines = option.result.complete_lines()
+        print('OPTION: ',
+              aggregate_height,
+              max_height,
+              holes,
+              complete_lines)
+
+        # weight the above and figure out best option
+        if False:
+            best_option = option
+
+    return best_option
 
 
 def run_game_example():
@@ -7,81 +31,34 @@ def run_game_example():
     # Create new game grid and get a list of shapes
     game = TetrisGame()
 
-    while True:
+    while not game.lost:
+        # Clear the terminal
+        print(chr(27) + "[2J")
 
-        # Choose random tetromino
-        tet = game.get_next_tetromino()
-        tet_grid = tet.grid
+        # Get possible moves with piece
+        options = game.get_move_options(game.current_piece)
 
-        # Check to see if this piece can be placed on the board without a
-        # collision.  (If not, it's game over)
-        if game.grid.collision(tet_grid):
-            print("Game over!")
+        # No possible moves - game lost
+        if not options:
             break
 
-        # AI step -------------------------------------------------------------
+        # AI STEP - analyze result here
+        move = pick_option(options)
 
-        # Rotate the tetromino randomly
-        rand_rotation = random.randint(1, tet.rotation_steps)
-        tet.rotate(rand_rotation)
-
-        # Check for a collision again, if there is one, revert back
-        if game.grid.collision(tet_grid):
-            tet.rotation = 0
-
-        tet_grid = tet.grid
-
-        # Let's try moving the tetromino either right or left a random amount
-        direction = random.choice([-1, 1])
-        count = random.randint(0, 5)
-
-        # Move the tetromino that direction step-by-step, checking for
-        # collisions each step
-        while count and (tet_grid_side := tet_grid.translate(direction, 0)):
-            if game.grid.collision(tet_grid_side):
-                break
-            tet_grid = tet_grid_side
-            count -= 1
-
-        # Game step -----------------------------------------------------------
-
-        # Let's move the tetromino down until it can't go down anymore
-        # We go either until the translation is invalid (meaning we tried to
-        # move passed the floor) or until we collide with existing blocks
-        while tet_grid_down := tet_grid.translate(0, 1):
-            if(game.grid.collision(tet_grid_down)):
-                break
-            tet_grid = tet_grid_down
-
-        # We've found a good random spot to plant our tetromino
-        # Let's get some stats about this move
-        game_grid_copy = game.grid.copy()
-        game_grid_copy.absorb(tet_grid)
-
-        aggregate_height = game_grid_copy.aggregate_height()
-        max_height = game_grid_copy.max_height()
-        holes = game_grid_copy.holes()
-        complete_lines = game_grid_copy.complete_lines()
-
-        # That would be some very useful info for an AI trying to decide how
-        # good of a position this is!
-
+        game.execute_move(move)
         # Let's print the new game grid and its stats
-        print(game_grid_copy)
+        print(game.grid)
 
-        print("Aggregate height: " + str(aggregate_height))
-        print("Max height: " + str(max_height))
-        print("Holes: " + str(holes))
-        print("Complete lines: " + str(complete_lines))
+        print("Aggregate height: " + str(game.grid.aggregate_height()))
+        print("Max height: " + str(game.grid.max_height()))
+        print("Holes: " + str(game.grid.holes()))
+        print("Complete lines: " + str(game.grid.complete_lines()))
 
         # Pause to let the user hit enter
         input("Press enter to continue...")
 
-        # Let's commit to that state
-        game.grid = game_grid_copy
-
         # Time to do some post-move clean-up
-        game.grid.wipe_complete_lines()
+        # game.grid.wipe_complete_lines()
 
 
 run_game_example()

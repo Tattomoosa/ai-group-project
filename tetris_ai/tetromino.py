@@ -131,3 +131,6 @@ class Tetromino:
 
     def __ne__(self, other):
         return not self == other
+
+    def __str__(self):
+        return f"< Tetromino shape_key = '{self.shape_key}' rotation = {self.rotation} >"

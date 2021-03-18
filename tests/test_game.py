@@ -1,5 +1,6 @@
 import unittest
-from tetris_ai import TetrisGame, Tetromino, Grid
+from tetris_ai import Tetromino, Grid
+from tetris_ai.tetris_game import TetrisGame, TetrisMove
 
 
 class TestTetrisGame(unittest.TestCase):
@@ -56,28 +57,9 @@ class TestTetrisGame(unittest.TestCase):
 
     def test_possible_outcomes(self):
         game = TetrisGame()
-        moves = game.get_possible_moves(Tetromino("I"))
-        print(moves)
-        move_outcomes = game.get_possible_outcomes(Tetromino("I"))
-        move_outcomes_check = []
-        for move in moves:
-            piece = Tetromino("I")
-            x = move[0]
-            piece.rotation = move[1]
-            grid = game.get_move_outcome(piece, x)
-            move_outcomes_check.append(grid)
+        move_options = game.get_move_options(Tetromino("I"))
 
-        print(move_outcomes)
-        print()
-        print(move_outcomes_check)
-
-        for outcome in zip(moves, move_outcomes, move_outcomes_check):
-            if outcome[1] != outcome[2]:
-                print("MOVE OUTCOME and CHECK not equal!")
-                print("MOVE")
-                print(outcome[0])
-                print("MOVE OUTCOME")
-                print(outcome[1])
-                print("MOVE OUTCOME CHECK")
-                print(outcome[2])
-                # self.assertEqual(outcome[0], outcome[1])
+        for option in move_options:
+            game = TetrisGame()
+            game.execute_move(option.tetromino, option.x)
+            self.assertEqual(game.grid, option.result)

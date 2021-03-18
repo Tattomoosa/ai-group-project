@@ -199,7 +199,7 @@ class Grid:
 
     def wipe_complete_lines(self):
         # Wipes all complete lines on this grid
-        self.wipe_masked_lines(self.complete_lines())
+        self.wipe_masked_lines(self.complete_line_mask())
 
 
 def layout_to_grid(layout):
