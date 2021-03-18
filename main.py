@@ -1,6 +1,16 @@
 from typing import List
 from tetris_ai import Tetromino, TetrisGame, TetrisMove
 import random
+import time
+
+# settings
+PRESS_ENTER_TO_ADVANCE = False
+SLEEP_TIME = 0.1
+
+
+def clear_terminal():
+    # Clear the terminal
+    print(chr(27) + "[2J")
 
 
 def pick_option(options: List[TetrisMove]):
@@ -21,11 +31,11 @@ def pick_option(options: List[TetrisMove]):
         max_height = option.result.max_height()
         holes = option.result.holes()
         lines_cleared = option.lines_cleared
-        print('OPTION: ',
-              aggregate_height,
-              max_height,
-              holes,
-              lines_cleared)
+        # print(f'OPTION {index}: ',
+        #      aggregate_height,
+        #      max_height,
+        #      holes,
+        #      lines_cleared)
 
         # TODO do something better
         # Higher the score means better option
@@ -35,6 +45,9 @@ def pick_option(options: List[TetrisMove]):
             best_option = option
             best_option_eval = test_eval
 
+    # print(f'PICKED OPTION {best_index}:')
+    # print(best_option)
+    # sleep_or_wait("Press enter to drop...")
     return best_option
 
 
@@ -52,8 +65,7 @@ def run_game_example():
     game = TetrisGame()
 
     while not game.lost:
-        # Clear the terminal
-        print(chr(27) + "[2J")
+        clear_terminal()
 
         # Get possible moves with piece
         options = game.get_move_options()
@@ -64,21 +76,27 @@ def run_game_example():
 
         # AI STEP - analyze result here
         move = pick_option(options)
+        game.print_stats()
+        print(move)
+        time.sleep(SLEEP_TIME)
 
         # updates game state for next step
         game.execute_move(move)
 
+        clear_terminal()
         # Let's print the new game grid and its stats
+        game.print_stats()
         print(game.grid)
-        print("Aggregate height: " + str(game.grid.aggregate_height()))
-        print("Max height: " + str(game.grid.max_height()))
-        print("Holes: " + str(game.grid.holes()))
-        print("Complete lines: " + str(game.grid.complete_lines()))
-        print("Next piece:")
-        game.current_piece.print_block()
+        # print("Aggregate height: " + str(game.grid.aggregate_height()))
+        # print("Max height: " + str(game.grid.max_height()))
+        # print("Holes: " + str(game.grid.holes()))
+        # print("Complete lines: " + str(game.grid.complete_lines()))
 
         # Pause to let the user hit enter
-        input("Press enter to continue...")
+        if PRESS_ENTER_TO_ADVANCE:
+            input("Press Enter to continue...")
+        else:
+            time.sleep(SLEEP_TIME)
 
 
 run_game_example()

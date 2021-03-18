@@ -4,11 +4,28 @@ from random import shuffle
 
 
 class TetrisMove:
-    def __init__(self, tetromino: Tetromino, x: int, outcome: Grid, lines_cleared: int):
+    def __init__(
+        self,
+        tetromino: Tetromino,
+        x: int,
+        before: Grid,
+        result: Grid,
+        lines_cleared: int
+    ):
         self.tetromino = tetromino
         self.x = x
-        self.result = outcome
+        self.before = before
+        self.result = result
         self.lines_cleared = lines_cleared
+        self.score = 0
+        if lines_cleared == 1:
+            self.score = 50
+        elif lines_cleared == 2:
+            self.score = 150
+        elif lines_cleared == 3:
+            self.score = 350
+        elif lines_cleared == 4:
+            self.score = 1000
 
     def __eq__(self, other):
         if not isinstance(other, type(self)):
@@ -20,6 +37,12 @@ class TetrisMove:
     def __ne__(self, other):
         return not self == other
 
+    def __str__(self):
+        tet_grid = self.tetromino.grid.translate(self.x, 0)
+        move_grid = self.before.copy()
+        move_grid.absorb(tet_grid)
+        return str(move_grid)
+
 
 class TetrisGame:
 
@@ -30,6 +53,8 @@ class TetrisGame:
         self._tetromino_bag = []
         self._get_next_tetromino()
         self.turns_elapsed = 0
+        self.lines_cleared = 0
+        self.score = 0
 
     def _get_move_outcome(self, tetromino: Tetromino, x: int) -> [Grid, None]:
         tet_grid = tetromino.grid
@@ -53,7 +78,7 @@ class TetrisGame:
         grid.absorb(tet_grid)
         lines_cleared = grid.complete_lines()
         grid.wipe_complete_lines()
-        return TetrisMove(tetromino, x, grid, lines_cleared)
+        return TetrisMove(tetromino, x, self.grid.copy(), grid, lines_cleared)
 
     # returns (x, rotation)[]
     def _get_possible_moves(self, piece: Tetromino) -> [(int, int)]:
@@ -92,3 +117,12 @@ class TetrisGame:
         self.grid = move.result
         self.current_piece = self._get_next_tetromino()
         self.turns_elapsed += 1
+        self.lines_cleared += move.lines_cleared
+        self.score += move.score
+
+    def print_stats(self):
+        print("Next piece:")
+        self.current_piece.print_block()
+        print(f"Score: {self.score}")
+        print(f"Pieces dropped: {self.turns_elapsed}")
+        print(f"Lines cleared: {self.lines_cleared}")
