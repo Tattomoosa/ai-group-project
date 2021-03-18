@@ -19,7 +19,8 @@ def pick_option(options: List[TetrisMove]):
         "aggregate_height": -1,
         "max_height": -1,
         "holes": -1,
-        "lines_cleared": 1
+        "lines_cleared": 1,
+        "score": 1,
     }
     best_option = random.choice(options)
     best_option_eval = calc_pick(best_option, weights)
@@ -57,7 +58,8 @@ def calc_pick(option, weights):
     return (option.result.aggregate_height() * weights["aggregate_height"]
             + option.result.max_height() * weights["max_height"]
             + option.result.holes() * weights["holes"]
-            + option.lines_cleared * weights["lines_cleared"])
+            + option.lines_cleared * weights["lines_cleared"]
+            + option.score * weights["score"])
 
 
 def run_game_example():
@@ -88,10 +90,6 @@ def run_game_example():
         # Let's print the new game grid and its stats
         game.print_stats()
         print(game.grid)
-        # print("Aggregate height: " + str(game.grid.aggregate_height()))
-        # print("Max height: " + str(game.grid.max_height()))
-        # print("Holes: " + str(game.grid.holes()))
-        # print("Complete lines: " + str(game.grid.complete_lines()))
 
         # Pause to let the user hit enter
         if PRESS_ENTER_TO_ADVANCE:
